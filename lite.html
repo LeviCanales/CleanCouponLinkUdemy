@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Clean Coupon Link Udemy</title>
+  </head>
+  <body class="flex h-screen items-center">
+    <div class="px-2 sm:px-4 md:px-6 lg:px-8 w-full">
+      <div class="sm:col-span-2">
+        <div class="mt-2.5">
+          <input
+            name="txt-p"
+            id="txt-p"
+            class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            placeholder="Pegue aquí su enlace"
+          >
+        </div>
+      </div>
+      <div class="sm:col-span-2 mt-2.5">
+        <div class="mt-2.5">
+          <textarea onclick="copiar()"
+          name="txt-c"
+          id="txt-c"
+          readonly
+          class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">Toque aquí va ver los resultados</textarea>
+        </div>
+      </div>
+    </div>
+    <script>
+        const pegar = (elemento) => {
+            /*navigator.clipboard.readText()
+            .then(link => {
+                elemento.textContent = link;
+                copiar(link);
+            })
+            .catch((err) => {
+                console.error('Error al copiar texto al portapapeles: ', err);
+                elemento.textContent = 'Dele los permisos si quiere quitar el contenido no necesario'
+            });*/
+        }
+        const copiar = (link = document.querySelector("#txt-p").value) => {
+            try {
+                new URL(link);
+            } catch (error) {
+                document.querySelector("#txt-c").textContent = 'Ingrese una URL valida';
+                return;
+            }
+            const url = new URL(link);
+            if (!/www\.udemy\.com/.test(url.origin)) {
+                document.querySelector("#txt-c").textContent = 'Use una url de UDEMY no de: ' + url.origin;
+                return;
+            }
+            const obj = new URLSearchParams(url.search);
+            if(!obj.get('couponCode')){
+                document.querySelector("#txt-c").textContent = 'El enlace: "' + link + '"" no tiene parámetro couponCode';
+                return;
+            }
+            const enlace = url.origin+url.pathname+"?couponCode="+obj.get('couponCode');
+            document.querySelector("#txt-c").textContent = enlace;
+            document.querySelector("#txt-c").select();
+            /*navigator.clipboard.writeText(enlace).then(() => {
+                document.querySelector("#txt-c").textContent = 'Se ha copiado: ' + enlace + ' ¡Exitosamente!';
+            })
+            .catch((err) => {
+                document.querySelector("#txt-c").textContent = `Error al copiar "${enlace}" texto al portapapeles`;
+            });*/
+        }
+    </script>
+  </body>
+</html>
