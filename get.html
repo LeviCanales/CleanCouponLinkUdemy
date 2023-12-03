@@ -47,11 +47,13 @@
                 new URL(link);
             } catch (error) {
                 document.querySelector("#txt-c").textContent = 'Ingrese una URL valida'
+                elemento.disabled = false;
                 return;
             }
             const url = new URL(link);
             if (!/findmycourse\.in/.test(url.origin)) {
                 document.querySelector("#txt-c").textContent = 'Use una url de FindMyCourse no de: ' + url.origin
+                elemento.disabled = false;
                 return;
             }
             const enlace = 'https://findmycourse-backend.findmycourse.in'+url.pathname;
@@ -65,7 +67,8 @@
                 const res = await respuesta.json();
 
                 navigator.clipboard.writeText(res.courses[0].courseLink).then(() => {
-                document.querySelector("#txt-c").textContent = 'Se ha copiado: ' + res.courses[0].courseLink + ' ¡Exitosamente!';
+                    elemento.value = 'Toque aquí, si quiere obtener otro enlace';
+                    document.querySelector("#txt-c").textContent = 'Se ha copiado: ' + res.courses[0].courseLink + ' ¡Exitosamente!';
                 })
                 .catch((err) => {
                     document.querySelector("#txt-c").textContent = `Error al copiar "${res.courses[0].courseLink}" texto al portapapeles`;
