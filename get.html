@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Get Link Udemy</title>
+  </head>
+  <body class="flex h-screen items-center">
+    <div class="px-2 sm:px-4 md:px-6 lg:px-8 w-full">
+      <div class="sm:col-span-2">
+        <div class="mt-2.5">
+          <textarea onclick="pegar(this)"
+            name="txt-p"
+            id="txt-p"
+            readonly
+            class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          >Toque aquí</textarea>
+        </div>
+      </div>
+      <div class="sm:col-span-2 mt-2.5">
+        <div class="mt-2.5">
+          <textarea onclick="pegar(this)"
+            name="txt-c"
+            id="txt-c"
+            disabled
+            class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          >Aquí va ver los resultados</textarea>
+        </div>
+      </div>
+    </div>
+    <script>
+        const pegar = elemento => {
+            navigator.clipboard.readText()
+            .then(link => {
+                elemento.textContent = link;
+                elemento.disabled = true;
+                copiar(link, elemento);
+            })
+            .catch((err) => {
+                console.error('Error al copiar texto al portapapeles: ', err);
+                elemento.textContent = 'Dele los permisos si obtener link de Udemy'
+            });
+        }
+        const copiar = async (link, elemento) => {
+            try {
+                new URL(link);
+            } catch (error) {
+                document.querySelector("#txt-c").textContent = 'Ingrese una URL valida'
+                return;
+            }
+            const url = new URL(link);
+            if (!/findmycourse\.in/.test(url.origin)) {
+                document.querySelector("#txt-c").textContent = 'Use una url de FindMyCourse no de: ' + url.origin
+                return;
+            }
+            const enlace = 'https://findmycourse-backend.findmycourse.in'+url.pathname;
+            try {
+                const respuesta = await fetch(enlace)
+
+                if (!respuesta.ok) {
+                    throw new Error('No hay contacto con el recurso');
+                }
+
+                const res = await respuesta.json();
+
+                navigator.clipboard.writeText(res.courses[0].courseLink).then(() => {
+                document.querySelector("#txt-c").textContent = 'Se ha copiado: ' + res.courses[0].courseLink + ' ¡Exitosamente!';
+                })
+                .catch((err) => {
+                    document.querySelector("#txt-c").textContent = `Error al copiar "${res.courses[0].courseLink}" texto al portapapeles`;
+                }).finally(()=>{
+                    elemento.disabled = false;
+                })
+            } catch (error) {
+                console.error(error);
+            }
+            
+        }
+    </script>
+  </body>
+</html>
