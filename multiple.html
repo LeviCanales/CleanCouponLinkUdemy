@@ -29,7 +29,7 @@
                             <label for="txtP" class="form-label">Toque para ir pegando sus enlaces y limpiarlos</label>
                         </div>
                         <div class="form-floating mt-3">
-                            <textarea class="form-control" id="txtC" onclick="copiar(this)" placeholder="Enlaces" style="height: 10em"></textarea>
+                            <textarea class="form-control" id="txtC" onclick="copiar(this)" placeholder="Enlaces" style="height: 10em" readonly></textarea>
                             <label for="txtP" class="form-label">Toque para copiar con espacio de por medio</label>
                         </div>
                     </div>
@@ -84,6 +84,9 @@
         }
 
         const copiar = async elemento => {
+            if (!txtP.value.length) {
+                return;
+            }
             let texto = [...txtP.value.matchAll(/[^\s]+/g)].map(e => e[0]).join('\n\n');
             txtC.textContent = texto;
             try {
