@@ -8,29 +8,21 @@
   </head>
   <body class="flex h-screen items-center">
     <div class="px-2 sm:px-4 md:px-6 lg:px-8 w-full">
-      <div class="sm:col-span-2">
-        <div class="mt-2.5">
-          <textarea onclick="pegar(this)"
-            name="txt-p"
-            id="txt-p"
-            readonly
-            class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          >Toque aquí</textarea>
-        </div>
-      </div>
-      <div class="sm:col-span-2 mt-2.5">
-        <div class="mt-2.5">
-          <textarea onclick="pegar(this)"
-            name="txt-c"
-            id="txt-c"
-            disabled
-            class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          >Aquí va ver los resultados</textarea>
-        </div>
-      </div>
+      <textarea onclick="pegar(this)"
+        name="txt-p"
+        id="txt-p"
+        readonly
+        class="block w-full mt-2 rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+      >Toque aquí­</textarea>
+      <textarea onclick="pegar(this)"
+        name="txt-c"
+        id="txt-c"
+        disabled
+        class="block w-full mt-2 rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+      >Aquí va ver los resultados</textarea>
     </div>
     <script>
-        const pegar = (elemento) => {
+        const pegar = elemento => {
             navigator.clipboard.readText()
             .then(link => {
                 elemento.textContent = link;
@@ -41,7 +33,7 @@
                 elemento.textContent = 'Dele los permisos si quiere quitar el contenido no necesario'
             });
         }
-        const copiar = (link) => {
+        const copiar = link => {
             try {
                 new URL(link);
             } catch (error) {
