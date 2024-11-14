@@ -110,7 +110,7 @@
                 const respuesta = await fetch('https://findmycourse-backend.findmycourse.in'+url.pathname)
 
                 if (!respuesta.ok) {
-                    throw new Error('No hay contacto con el recurso');
+                    return false;
                 }
 
                 const res = await respuesta.json();
