@@ -19,7 +19,7 @@
                             <ul class="mb-0">
                                 <b>No se pegara:</b>
                                 <li>Texto que no sea enlace</li>
-                                <li>Enlaces que no sean de Udemy</li>
+                                <li>Enlaces que no sean de Udemy, StudyBullet, FindMyCourse o Courson</li>
                                 <li>Enlaces repetidos</li>
                                 <li>Enlaces repetidos luego de limpiar</li>
                             </ul>
@@ -43,6 +43,7 @@
     <script>
         const pegar = async elemento => {
             try {
+                elemento.disabled = true;
                 const texto = await navigator.clipboard.readText();
 
                 const arreglo = [...texto.matchAll(/https?\:\/\/[^\s]+/g)].map(e => e[0]);
@@ -63,6 +64,8 @@
             } catch (error) {
                 console.error('Error al pegar texto del portapapeles: ', error);
                 elemento.textContent = 'Dele los permisos para continuar';
+            } finally {
+                elemento.disabled = false;
             }
         }
 
@@ -73,7 +76,47 @@
                 return false;
             }
             const url = new URL(link);
-            if (!/www\.udemy\.com/.test(url.origin)) {
+            if (/studybullet\.com/.test(url.origin)) {
+                const respuesta = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url.origin+url.pathname)}`);
+                if (!respuesta.ok) {
+                    return false;
+                }
+                const res = await respuesta.json();
+                if (res.contents) {
+                    const parser = new DOMParser();
+                    const html = parser.parseFromString(res.contents, 'text/html');
+                    const botonHref = html.querySelector('.button_cont .enroll_btn');
+                    const resultado = await validar(botonHref.href);
+                    return resultado;
+                } else {
+                    return false;
+                }
+            } else if (/courson\.xyz/.test(url.origin)) {
+                const respuesta = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url.origin+url.pathname)}`);
+                if (!respuesta.ok) {
+                    return false;
+                }
+                const res = await respuesta.json();
+                if (res.contents) {
+                    const parser = new DOMParser();
+                    const html = parser.parseFromString(res.contents, 'text/html');
+                    const botonHref = html.querySelector('.enroll-btn .btn-link:has(#enroll)');
+                    const resultado = await validar(botonHref.href);
+                    return resultado;
+                } else {
+                    return false;
+                }
+            } else if (/findmycourse\.in/.test(url.origin)) {
+                const respuesta = await fetch('https://findmycourse-backend.findmycourse.in'+url.pathname)
+
+                if (!respuesta.ok) {
+                    throw new Error('No hay contacto con el recurso');
+                }
+
+                const res = await respuesta.json();
+                const resultado = await validar(res.courses[0].courseLink);
+                return resultado;
+            } else if (!/(www\.)?udemy\.com/.test(url.origin)) {
                 return false;
             }
             const obj = new URLSearchParams(url.search);
