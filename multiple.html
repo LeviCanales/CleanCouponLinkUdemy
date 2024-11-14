@@ -55,7 +55,7 @@
                         validados.push(resultado);
                     }
                 }
-                let existentes = [...elemento.value.matchAll(/[^\s]+/g)].map(e => e[0]);
+                let existentes = [...elemento.value.matchAll(/https?\:\/\/[^\s]+/g)].map(e => e[0]);
                 const arregloEnlaces = existentes.concat(validados);
                 const unicosValidados = Array.from(new Set(arregloEnlaces));
                 const enlaces = unicosValidados.join('\n')
